@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">tic-tac-toe</string>
+    <string name="app_name">Tic-Tac-Toe</string>
     <string name="bluetooth_not_supported">Bluetooth not supported</string>
 </resources>
