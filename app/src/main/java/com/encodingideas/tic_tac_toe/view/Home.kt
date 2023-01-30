@@ -9,7 +9,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -21,11 +20,13 @@ import androidx.lifecycle.Observer
 import com.encodingideas.tic_tac_toe.common.BluetoothUtil
 import com.encodingideas.tic_tac_toe.model.Settings
 import com.encodingideas.tic_tac_toe.repository.SettingsRepository
+import com.encodingideas.tic_tac_toe.service.BluetoothService
 import com.encodingideas.tic_tac_toe.ui.theme.TictactoeTheme
-import com.encodingideas.tic_tac_toe.widgets.DeviceBtData
+import com.encodingideas.tic_tac_toe.vo.DeviceBtData
 import com.encodingideas.tic_tac_toe.widgets.ItemDeviceBt
 
 class Home : ComponentActivity() {
+    private lateinit var bluetoothService: BluetoothService
     lateinit var settings: State<Settings?>
     lateinit var bluetoothUtil: BluetoothUtil
     var deviceList = setOf<BluetoothDevice>()
@@ -47,6 +48,8 @@ class Home : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
+        bluetoothService = BluetoothService(this)
+        bluetoothService.initializeServerMode()
         bluetoothUtil = BluetoothUtil(this).apply {
             setUp()
         }
@@ -111,11 +114,14 @@ class Home : ComponentActivity() {
                         deviceList.map {
                             DeviceBtData(
                                 it.name,
-                                it.address
+                                it.address,
+                                it
                             )
                         }.forEach { elmData ->
                             item {
-                                ItemDeviceBt(deviceBtData = elmData)
+                                ItemDeviceBt(deviceBtData = elmData) {
+                                    bluetoothService?.connectToDevice(elmData.device)
+                                }
                             }
                         }
                     }

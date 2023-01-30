@@ -24,7 +24,7 @@ class BluetoothUtil(private val activity: Activity) {
 
 
         if (bluetoothAdapter == null) {
-            println("No bluetooth")
+            println("BluetoothUtil - No bluetooth")
             return
         }
         checkEnabledBt(bluetoothAdapter)
